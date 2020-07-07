@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MAM Properties
  * Plugin URI: https://github.com/AliSal92/mam-properties
- * Description: a Wordpress plugin to easily add properties to your website.
+ * Description: a Wordpress plugin to easily add properties to your website. (requires ACF Pro to be installed and active)
  * Version: 1.0
  * Author: AliSal
  * Author URI: https://github.com/AliSal92/

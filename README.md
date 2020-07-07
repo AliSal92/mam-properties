@@ -10,7 +10,7 @@ Stable tag: 1.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-a Wordpress plugin to easily add properties to your website.
+a Wordpress plugin to easily add properties to your website. (requires ACF Pro to be installed and active)
 
 == Description ==
 Create simple properties using Advanced custom fields.
