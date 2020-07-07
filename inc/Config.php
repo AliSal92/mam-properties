@@ -34,7 +34,7 @@ class Config
             /**
              * Google Maps API Key
              */
-            'google_api_key' => ''
+            'google_api_key' => 'AIzaSyC_HjGT2znOV9G3FO7anLIbRyRQfRvTE-M'
         ];
         $this->setConfig($config);
     }
