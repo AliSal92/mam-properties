@@ -4,6 +4,8 @@
 namespace MAM\Plugin;
 
 
+use MAM\Plugin\Services\PostType\Property;
+
 final class Init
 {
     /**
@@ -13,7 +15,7 @@ final class Init
     public static function get_services()
     {
         return [
-
+            Property::class
         ];
     }
 

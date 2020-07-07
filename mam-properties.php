@@ -23,7 +23,6 @@
 namespace MAM;
 
 use MAM\Plugin\Init;
-use MAM\Plugin\Base\ActivateDeactivate;
 
 /**
  * Prevent direct access
@@ -40,23 +39,17 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 /**
  * The code that runs during plugin activation
  */
-function activate_mam_property_plugin() {
-    ActivateDeactivate::activate();
-}
-register_activation_hook( __FILE__, 'activate_mam_property_plugin' );
+register_activation_hook( __FILE__ . '/ActivateDeactivate.php', 'activate_mam_property_plugin' );
 
 
 /**
  * The code that runs during plugin deactivation
  */
-function deactivate_mam_property_plugin() {
-    ActivateDeactivate::deactivate();
-}
-register_deactivation_hook( __FILE__, 'deactivate_mam_property_plugin' );
+register_activation_hook( __FILE__ . '/ActivateDeactivate.php', 'deactivate_mam_property_plugin' );
 
 /**
  * Initialize and run all the core classes of the plugin
  */
-if ( class_exists( 'Inc\\Init' ) ) {
+if ( class_exists( 'MAM\Plugin\Init' ) ) {
     Init::register_services();
 }
