@@ -24,8 +24,8 @@ Create simple properties using Advanced custom fields.
 No FAQs at the moment, feel free to discuss issues in with support.
 
 == Screenshots ==
-1. Front-end Screenshot.
-2. Back-end Screenshot.
+1. Front-end screenshot.
+2. Back-end screenshot.
 
 == Changelog ==
 = 1.0 =
