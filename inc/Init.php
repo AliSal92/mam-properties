@@ -5,6 +5,7 @@ namespace MAM\Plugin;
 
 
 use MAM\Plugin\Services\PostType\Property;
+use MAM\Plugin\Services\SearchForm\SearchForm;
 
 final class Init
 {
@@ -15,7 +16,8 @@ final class Init
     public static function get_services()
     {
         return [
-            Property::class
+            Property::class,
+            SearchForm::class
         ];
     }
 

@@ -34,7 +34,11 @@ class Config
             /**
              * Google Maps API Key
              */
-            'google_api_key' => 'AIzaSyC_HjGT2znOV9G3FO7anLIbRyRQfRvTE-M'
+            'google_api_key' => 'AIzaSyC_HjGT2znOV9G3FO7anLIbRyRQfRvTE-M',
+            /**
+             * Text domain to be used for translations
+             */
+            'text_domain' => 'mam-properties'
         ];
         $this->setConfig($config);
     }
@@ -53,7 +57,7 @@ class Config
     /**
      * @param array $config
      */
-    private function setConfig(array $config): void
+    private function setConfig(array $config)
     {
         $this->config = $config;
     }

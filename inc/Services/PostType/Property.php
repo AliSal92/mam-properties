@@ -17,6 +17,8 @@ class Property implements ServiceInterface
     {
         add_action('init', array($this, 'initPropertyPostType'), 0);
         add_filter('single_template', array($this, 'initPropertyTemplate'));
+        add_filter('template_include', array($this, 'archive_template'));
+        add_filter('mam-property-filtered-posts', array($this, 'filtered_posts'));
         add_action('acf/init', array($this, 'initACFMapAPI'));
         add_action('acf/init', array($this, 'addPropertyCustomFields'));
     }
@@ -27,37 +29,37 @@ class Property implements ServiceInterface
     public static function initPropertyPostType()
     {
         $labels = array(
-            'name' => _x('Properties', 'Post Type General Name', 'mam_property'),
-            'singular_name' => _x('Property', 'Post Type Singular Name', 'mam_property'),
-            'menu_name' => __('Properties', 'mam_property'),
-            'name_admin_bar' => __('Property', 'mam_property'),
-            'archives' => __('Item Archives', 'mam_property'),
-            'attributes' => __('Item Attributes', 'mam_property'),
-            'parent_item_colon' => __('Parent Property:', 'mam_property'),
-            'all_items' => __('All Properties', 'mam_property'),
-            'add_new_item' => __('Add New Property', 'mam_property'),
-            'add_new' => __('Add New', 'mam_property'),
-            'new_item' => __('New Property', 'mam_property'),
-            'edit_item' => __('Edit Property', 'mam_property'),
-            'update_item' => __('Update Property', 'mam_property'),
-            'view_item' => __('View Property', 'mam_property'),
-            'view_items' => __('View Properties', 'mam_property'),
-            'search_items' => __('Search Property', 'mam_property'),
-            'not_found' => __('Not found', 'mam_property'),
-            'not_found_in_trash' => __('Not found in Trash', 'mam_property'),
-            'featured_image' => __('Featured Image', 'mam_property'),
-            'set_featured_image' => __('Set featured image', 'mam_property'),
-            'remove_featured_image' => __('Remove featured image', 'mam_property'),
-            'use_featured_image' => __('Use as featured image', 'mam_property'),
-            'insert_into_item' => __('Insert into', 'mam_property'),
-            'uploaded_to_this_item' => __('Uploaded to this Property', 'mam_property'),
-            'items_list' => __('Items list', 'mam_property'),
-            'items_list_navigation' => __('Items list navigation', 'mam_property'),
-            'filter_items_list' => __('Filter Properties list', 'mam_property'),
+            'name' => _x('Properties', 'Post Type General Name', 'mam-properties'),
+            'singular_name' => _x('Property', 'Post Type Singular Name', 'mam-properties'),
+            'menu_name' => __('Properties', 'mam-properties'),
+            'name_admin_bar' => __('Property', 'mam-properties'),
+            'archives' => __('Item Archives', 'mam-properties'),
+            'attributes' => __('Item Attributes', 'mam-properties'),
+            'parent_item_colon' => __('Parent Property:', 'mam-properties'),
+            'all_items' => __('All Properties', 'mam-properties'),
+            'add_new_item' => __('Add New Property', 'mam-properties'),
+            'add_new' => __('Add New', 'mam-properties'),
+            'new_item' => __('New Property', 'mam-properties'),
+            'edit_item' => __('Edit Property', 'mam-properties'),
+            'update_item' => __('Update Property', 'mam-properties'),
+            'view_item' => __('View Property', 'mam-properties'),
+            'view_items' => __('View Properties', 'mam-properties'),
+            'search_items' => __('Search Property', 'mam-properties'),
+            'not_found' => __('Not found', 'mam-properties'),
+            'not_found_in_trash' => __('Not found in Trash', 'mam-properties'),
+            'featured_image' => __('Featured Image', 'mam-properties'),
+            'set_featured_image' => __('Set featured image', 'mam-properties'),
+            'remove_featured_image' => __('Remove featured image', 'mam-properties'),
+            'use_featured_image' => __('Use as featured image', 'mam-properties'),
+            'insert_into_item' => __('Insert into', 'mam-properties'),
+            'uploaded_to_this_item' => __('Uploaded to this Property', 'mam-properties'),
+            'items_list' => __('Items list', 'mam-properties'),
+            'items_list_navigation' => __('Items list navigation', 'mam-properties'),
+            'filter_items_list' => __('Filter Properties list', 'mam-properties'),
         );
         $args = array(
-            'label' => __('Property', 'mam_property'),
-            'description' => __('Property post type by MAM Properties', 'mam_property'),
+            'label' => __('Property', 'mam-properties'),
+            'description' => __('Property post type by MAM Properties', 'mam-properties'),
             'labels' => $labels,
             'supports' => array('title', 'editor', 'thumbnail', 'revisions', 'excerpt', 'custom-fields'),
             'hierarchical' => false,
@@ -74,7 +76,7 @@ class Property implements ServiceInterface
             'publicly_queryable' => true,
             'capability_type' => 'page',
         );
-        register_post_type('property', $args);
+        register_post_type('mam-property', $args);
     }
 
     /**
@@ -84,9 +86,9 @@ class Property implements ServiceInterface
     {
         global $post;
         $config = Config::getInstance()->getConfig();
-
-        if ('property' === $post->post_type && locate_template(array('single-property.php')) !== $template) {
-            return $config['plugin_path'] . 'templates/single-property.php';
+        $theme_files = array('archive-mam-property.php', 'mam-property/single-mam-property.php');
+        if ('mam-property' === $post->post_type && locate_template($theme_files) !== $template) {
+            return $config['plugin_path'] . 'templates/single-mam-property.php';
         }
 
         return $template;
@@ -104,9 +106,27 @@ class Property implements ServiceInterface
 
 
     /**
+     * add property archive template
+     */
+    public function archive_template($template)
+    {
+        if (is_post_type_archive('mam-property')) {
+            $theme_files = array('archive-mam-property.php', 'mam-property/archive-mam-property.php');
+            $exists_in_theme = locate_template($theme_files, false);
+            if ($exists_in_theme != '') {
+                return $exists_in_theme;
+            } else {
+                $config = Config::getInstance()->getConfig();
+                return $config['plugin_path'] . 'templates/archive-mam-property.php';
+            }
+        }
+        return $template;
+    }
+
+    /**
      * add property post type custom fields (using ACF Pro)
      */
-    function addPropertyCustomFields()
+    public function addPropertyCustomFields()
     {
         if (function_exists('acf_add_local_field_group')):
 
@@ -351,7 +371,7 @@ class Property implements ServiceInterface
                         array(
                             'param' => 'post_type',
                             'operator' => '==',
-                            'value' => 'property',
+                            'value' => 'mam-property',
                         ),
                     ),
                 ),
@@ -366,5 +386,104 @@ class Property implements ServiceInterface
             ));
 
         endif;
+    }
+
+    public function filtered_posts($getData)
+    {
+        $type = '';
+        if (isset($getData['property_type'])) {
+            $type = $getData['property_type'];
+        }
+        $status = '';
+        if (isset($getData['status'])) {
+            $status = $getData['status'];
+        }
+        $bts = '';
+        if (isset($getData['bts'])) {
+            $bts = $getData['bts'];
+        }
+        $location = '';
+        if (isset($getData['location'])) {
+            $location = $getData['location'];
+        }
+        $priceFrom = '';
+        if (isset($getData['pricefrom'])) {
+            $priceFrom = $getData['pricefrom'];
+        }
+        $priceTo = '';
+        if (isset($getData['priceto'])) {
+            $priceTo = $getData['priceto'];
+        }
+        $bedrooms = '';
+        if (isset($getData['bedrooms'])) {
+            $bedrooms = $getData['bedrooms'];
+        }
+        $meta_query = [];
+        $meta_query['relation'] = 'AND';
+
+        if ($type != '') {
+            $meta_query[] = [
+                'key' => 'property_type',
+                'value' => $type,
+                'compare' => '='
+            ];
+        }
+
+        if ($status != '') {
+            $meta_query[] = [
+                'key' => 'status',
+                'value' => $status,
+                'compare' => '='
+            ];
+        }
+
+        if ($bts != '') {
+            $meta_query[] = [
+                'key' => 'bts',
+                'value' => $bts,
+                'compare' => '='
+            ];
+        }
+
+        if ($location != '') {
+            $meta_query[] = [
+                'key' => 'location',
+                'value' => $location,
+                'compare' => '='
+            ];
+        }
+
+        if ($priceFrom != '') {
+            $meta_query[] = [
+                'key' => 'price',
+                'value' => $priceFrom,
+                'compare' => '>='
+            ];
+        }
+
+        if ($priceTo != '') {
+            $meta_query[] = [
+                'key' => 'price',
+                'value' => $priceTo,
+                'compare' => '<='
+            ];
+        }
+
+        if ($bedrooms != '') {
+            $meta_query[] = [
+                'key' => 'bedrooms',
+                'value' => $bedrooms,
+                'compare' => '='
+            ];
+        }
+        // args
+        $args = array(
+            'numberposts' => -1,
+            'post_type' => 'mam-property',
+            'meta_query' => $meta_query
+        );
+
+        // query
+        return new \WP_Query($args);
     }
 }
