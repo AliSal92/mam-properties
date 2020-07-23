@@ -62,9 +62,9 @@ class SearchForm implements ServiceInterface
         ];
 
         // init dynamic options from posts
-        $data['bts'] = [];
-        $data['location'] = [];
-        $data['bedrooms'] = [];
+        $btsA = [];
+        $locationA = [];
+        $bedroomsA = [];
 
         // WP_Query arguments
         $args = array(
@@ -83,21 +83,27 @@ class SearchForm implements ServiceInterface
                 $bts = get_field('bts');
                 $location = get_field('location');
                 $bedrooms = get_field('bedrooms');
-                if (!in_array($bts, $data['bts'])) {
-                    $data['bts'][] = $bts;
+                if (!in_array($bts, $btsA)) {
+                    $btsA[] = $bts;
                 }
-                if (!in_array($location, $data['location'])) {
-                    $data['location'][] = $location;
+                if (!in_array($location, $locationA)) {
+                    $locationA[] = $location;
                 }
-                if (!in_array($bedrooms, $data['bedrooms'])) {
-                    $data['bedrooms'][] = $bedrooms;
+                if (!in_array($bedrooms, $bedroomsA)) {
+                    $bedroomsA[] = $bedrooms;
                 }
             }
         }
 
         // Restore original Post Data
         wp_reset_postdata();
+        sort($btsA);
+        sort($locationA);
+        sort($bedroomsA);
 
+        $data['bts'] = $btsA;
+        $data['location'] = $locationA;
+        $data['bedrooms'] = $bedroomsA;
         return $data;
     }
 }
